@@ -5,7 +5,7 @@ interface LocatingElement{
 }
 
 //Composite Object
-public class LocationContainer {
+public class LocationContainer implements LocatingElement{
 
 }
 

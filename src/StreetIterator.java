@@ -8,7 +8,7 @@ interface Iterator{
 }
 
 //Concrete Iterator
-public class StreetIterator {
+public class StreetIterator implements Iterator {
 
 }
 
@@ -25,6 +25,6 @@ class Sensor{
 //-------------------------COMMON AREA----------------------------
 
 //ITERATOR: Concrete Aggregate ------- COMPOSITE: Leaf
-class Street{
+class Street implements LocatingElement{
 
 }
