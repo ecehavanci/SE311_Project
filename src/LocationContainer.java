@@ -7,6 +7,9 @@ interface LocatingElement {
     void Remove(LocatingElement locatingElement);
 
     void Display(int indent);
+
+    //TODO: WARNING VERY UNSURE ABOUT THAT
+    WasteCollectionDepartment getWCD();
 }
 
 //Composite Object
@@ -39,6 +42,11 @@ public class LocationContainer implements LocatingElement {
             locationList.get(i).Display(indent+1);
         }
     }
+
+    @Override
+    public WasteCollectionDepartment getWCD() {
+        return null;
+    }
 }
 
 //Leaf is in StreetIterator.java
@@ -47,9 +55,20 @@ public class LocationContainer implements LocatingElement {
 //Cities are composite objects, they have neighborhoods in them
 class City extends LocationContainer {
     //City has 3 landfills: one for medical waste, 2 for general use
-    MedicalLandfill medicalLandfill;
-    GeneralLandfill generalLandfill1;
-    GeneralLandfill generalLandfill2;
+    private MedicalLandfill medicalLandfill;
+    private GeneralLandfill generalLandfill1;
+    private GeneralLandfill generalLandfill2;
+
+    public City(String name, WasteCollectionDepartment WCD) {
+        super(name);
+        this.WCD = WCD;
+    }
+
+    public WasteCollectionDepartment getWCD() {
+        return WCD;
+    }
+
+    private WasteCollectionDepartment WCD;
 
     //comes from abstract factory pattern, city is the client
     //city uses Landfills
@@ -74,9 +93,14 @@ class City extends LocationContainer {
 
 //Neighborhoods are composite objects, they have streets in them
 class Neighborhood extends LocationContainer {
-
     public Neighborhood(String name) {
         super(name);
+    }
+
+    @Override
+    public WasteCollectionDepartment getWCD() {
+        System.out.println("Neighborhoods do not have Waste Collection department");
+        return super.getWCD();
     }
 }
 
