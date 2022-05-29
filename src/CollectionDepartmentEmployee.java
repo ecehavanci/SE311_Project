@@ -140,6 +140,11 @@ class TruckDriver {
     public void CollectWaste() {//
         System.out.println("Collecting waste...");
         //TODO: Iterator: Collect waste from all bins 80 percent or more full
+       /* for(i.First();  !i.IsDone(); i.Next()) {
+            System.out.println(i.CurrentTrashBin().getName());
+        }
+        System.out.println();*/
+
     }
 
     public void EmptyTruck() {

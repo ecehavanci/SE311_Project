@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 //Component
 interface LocatingElement {
+
     void Add(LocatingElement locatingElement);
 
     void Remove(LocatingElement locatingElement);

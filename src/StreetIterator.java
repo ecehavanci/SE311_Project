@@ -1,16 +1,33 @@
 
 //-----------------------ITERATOR - OBSERVER-------------------------
 
+import java.util.ArrayList;
 
 import java.util.ArrayList;
 
 //Abstract Iterator
-interface Iterator {
-
+interface Iterator{
+    void First();
+    void Next();
+    Boolean IsDone () ;
+    TrashBin CurrentTrashBin() ;
 }
 
 //Concrete Iterator
 public class StreetIterator implements Iterator {
+    private Street street;
+    private int current;
+
+    public void First() {current = 0;}
+    public void Next()  {current++; }
+    public TrashBin CurrentTrashBin() { return (IsDone() ? null : street.get(current)); }
+    public Boolean IsDone() {	return current >= street.getCount(); }
+    public StreetIterator(Street street) {
+        this.street = street;
+        current = 0;
+    }
+}
+
 
 }
 
@@ -140,6 +157,14 @@ class Street implements LocatingElement {
     public TrashBin GetTrashBin(int index){
         return trashBins.get(index);
     }
+
+    private ArrayList<TrashBin> trashBins = new ArrayList<TrashBin>();
+    public StreetIterator CreateIterator() {
+        return new StreetIterator(this);
+    }
+    public int getCount () {return trashBins.size(); }
+    public void add(TrashBin trashBin) {trashBins.add(trashBin);}
+    public TrashBin get(int index) { return trashBins.get(index);}
 
 
     @Override
