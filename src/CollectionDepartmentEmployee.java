@@ -70,7 +70,7 @@ class WasteCollectionDepartment {
         if (employee == null || truckDrivers.size() == 0 || trucks.size() == 0) {
             System.out.println("Garbage collection failed due to source problems.");
         } else if (collectionNeedingBinCounter >= 4) {
-            System.out.println("4 or more trash bins are at least 80% percent full. Starting Collection...");
+            System.out.println("4 or more trash bins are at least 80% full. Starting Collection...");
             Random random = new Random();//This is for selecting a random employee and a random truck
             //int empNum = random.nextInt(employees.size());
             int driverNum = random.nextInt(truckDrivers.size());

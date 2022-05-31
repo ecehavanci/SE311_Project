@@ -19,8 +19,8 @@ abstract class TrashBin {
     //Every trash bin knows about the Waste Collection Department they are going to notify when bin is 80% full
     WasteCollectionDepartment WCD;
     //Although in observer pattern there can be many observers, in this project every thrash bin has only one sensor.
-    //So there is no list of observers but only one observer that is attached to the notifier
-    Sensor sensor = null;
+    //So there is a list of observers but only one observer can be attached to the trash bin
+    ArrayList <Sensor> sensors = new ArrayList<>();
     protected double fullnessLevel;
 
     public TrashBin(WasteCollectionDepartment WCD) {
@@ -29,23 +29,33 @@ abstract class TrashBin {
 
     void Attach(Sensor sensor) {
         System.out.println("Attaching sensor...");
-        if (this.sensor == null) {
-            this.sensor = sensor;
+        if (this.sensors.size()==0) {
+            sensors.add(sensor);
         } else {
             System.out.println("This trash bin already has a sensor attached.");
         }
     }
 
     void Detach() {
-        sensor = null;
+        //Basically this will get rid of the list with posibly one element in it and create another list with size 0
+        if (sensors.size()==0){
+            sensors = new ArrayList<>();
+        }else {
+            System.out.println("There is no sensor attached, so nothing can be detached.");
+        }
     }
 
     public void Notify(char token) {
-        if (token == 'M') {
-            sensor.M_Update(this);
+        if (sensors.size()>0){
+            if (token == 'M') {
+                sensors.get(0).M_Update(this);
+            }
+            else if (token == 'G') {
+                sensors.get(0).G_Update(this);
+            }
         }
-        else if (token == 'G') {
-            sensor.G_Update(this);
+        else{
+            System.out.println("Problem! No sensor is attached to trash bin! Cannot send update to Waste Collection Department!");
         }
     }
 
@@ -101,17 +111,13 @@ class Sensor implements Observer {
     @Override
     public void M_Update(TrashBin trashBin) { //TODO: ADD A TYPE, THEN ADD M_DECIDE AND G_DECIDE
         System.out.println("Bin is 80% full. A notification is being sent to Waste Collection Department...");
-        //TODO: Notify
         trashBin.WCD.M_DecideIfGarbageCollectionNeeded();
-
     }
 
     @Override
     public void G_Update(TrashBin trashBin) {
         System.out.println("Bin is 80% full. A notification is being sent to Waste Collection Department...");
         trashBin.WCD.G_DecideIfGarbageCollectionNeeded();
-
-
     }
 }
 
