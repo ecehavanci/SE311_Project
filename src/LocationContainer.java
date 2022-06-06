@@ -9,6 +9,8 @@ interface LocatingElement {
 
     void Display(int indent);
 
+    void Traverse(TruckDriver truckDriver, String type);//type is "M" or "G" meaning medical or general
+
     //TODO: WARNING VERY UNSURE ABOUT THAT
     WasteCollectionDepartment getWCD();
 }
@@ -41,6 +43,13 @@ public class LocationContainer implements LocatingElement {
         System.out.println(name);
         for (int i = 0; i < locationList.size(); i++) {
             locationList.get(i).Display(indent+1);
+        }
+    }
+
+    @Override
+    public void Traverse(TruckDriver truckDriver, String type) {
+        for (int i = 0; i < locationList.size(); i++) {
+            locationList.get(i).Traverse(truckDriver, type);
         }
     }
 

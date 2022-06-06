@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.ArrayList;
 
 //Abstract Iterator
-interface Iterator{
+interface Iterator {
     void First();
+
     void Next();
-    Boolean IsDone () ;
-    TrashBin CurrentTrashBin() ;
+
+    Boolean IsDone();
+
+    TrashBin CurrentTrashBin();
 }
 
 //Concrete Iterator
@@ -18,10 +21,22 @@ public class StreetIterator implements Iterator {
     private Street street;
     private int current;
 
-    public void First() {current = 0;}
-    public void Next()  {current++; }
-    public TrashBin CurrentTrashBin() { return (IsDone() ? null : street.get(current)); }
-    public Boolean IsDone() {	return current >= street.getCount(); }
+    public void First() {
+        current = 0;
+    }
+
+    public void Next() {
+        current++;
+    }
+
+    public TrashBin CurrentTrashBin() {
+        return (IsDone() ? null : street.get(current));
+    }
+
+    public Boolean IsDone() {
+        return current >= street.getCount();
+    }
+
     public StreetIterator(Street street) {
         this.street = street;
         current = 0;
@@ -29,16 +44,18 @@ public class StreetIterator implements Iterator {
 }
 
 
-}
-
 //ITERATOR: Item --------- OBSERVER: Subject
 abstract class TrashBin {
     //Every trash bin knows about the Waste Collection Department they are going to notify when bin is 80% full
     WasteCollectionDepartment WCD;
     //Although in observer pattern there can be many observers, in this project every thrash bin has only one sensor.
     //So there is a list of observers but only one observer can be attached to the trash bin
-    ArrayList <Sensor> sensors = new ArrayList<>();
+    ArrayList<Sensor> sensors = new ArrayList<>();
     protected double fullnessLevel;
+
+    //Token is for identifying if it is general or medical later
+    protected String token;
+
 
     public TrashBin(WasteCollectionDepartment WCD) {
         this.WCD = WCD;
@@ -46,7 +63,7 @@ abstract class TrashBin {
 
     void Attach(Sensor sensor) {
         System.out.println("Attaching sensor...");
-        if (this.sensors.size()==0) {
+        if (this.sensors.size() == 0) {
             sensors.add(sensor);
         } else {
             System.out.println("This trash bin already has a sensor attached.");
@@ -55,25 +72,38 @@ abstract class TrashBin {
 
     void Detach() {
         //Basically this will get rid of the list with posibly one element in it and create another list with size 0
-        if (sensors.size()==0){
+        if (sensors.size() == 0) {
             sensors = new ArrayList<>();
-        }else {
+        } else {
             System.out.println("There is no sensor attached, so nothing can be detached.");
         }
     }
 
     public void Notify(char token) {
-        if (sensors.size()>0){
+        if (sensors.size() > 0) {
             if (token == 'M') {
+
                 sensors.get(0).M_Update(this);
-            }
-            else if (token == 'G') {
+
+            } else if (token == 'G') {
+
                 sensors.get(0).G_Update(this);
             }
-        }
-        else{
+        } else {
             System.out.println("Problem! No sensor is attached to trash bin! Cannot send update to Waste Collection Department!");
         }
+    }
+
+    public void setFullnessLevel(double fullnessLevel) {
+        this.fullnessLevel = fullnessLevel;
+    }
+
+    public double getFullnessLevel() {
+        return fullnessLevel;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public abstract void AddTrash(double trashAmount);
@@ -83,6 +113,7 @@ abstract class TrashBin {
 class MedicalTrashBin extends TrashBin {
     public MedicalTrashBin(WasteCollectionDepartment WCD) {
         super(WCD);
+        token = "M";
     }
 
     public void AddTrash(double trashAmount) {
@@ -102,6 +133,7 @@ class MedicalTrashBin extends TrashBin {
 class GeneralTrashBin extends TrashBin {
     public GeneralTrashBin(WasteCollectionDepartment WCD) {
         super(WCD);
+        token = "G";
     }
 
     public void AddTrash(double trashAmount) {
@@ -119,6 +151,7 @@ class GeneralTrashBin extends TrashBin {
 
 interface Observer {
     public void M_Update(TrashBin trashBin);
+
     public void G_Update(TrashBin trashBin);
 }
 
@@ -126,9 +159,11 @@ interface Observer {
 class Sensor implements Observer {
 
     @Override
-    public void M_Update(TrashBin trashBin) { //TODO: ADD A TYPE, THEN ADD M_DECIDE AND G_DECIDE
+    public void M_Update(TrashBin trashBin) {
+
         System.out.println("Bin is 80% full. A notification is being sent to Waste Collection Department...");
         trashBin.WCD.M_DecideIfGarbageCollectionNeeded();
+
     }
 
     @Override
@@ -150,21 +185,30 @@ class Street implements LocatingElement {
 
     private ArrayList<TrashBin> trashBins = new ArrayList<>();
 
-    public void AddTrashBin(TrashBin bin){
+    public void AddTrashBin(TrashBin bin) {
         trashBins.add(bin);
     }
 
-    public TrashBin GetTrashBin(int index){
+    public TrashBin GetTrashBin(int index) {
         return trashBins.get(index);
     }
 
-    private ArrayList<TrashBin> trashBins = new ArrayList<TrashBin>();
+    //private ArrayList<TrashBin> trashBins = new ArrayList<TrashBin>();
     public StreetIterator CreateIterator() {
         return new StreetIterator(this);
     }
-    public int getCount () {return trashBins.size(); }
-    public void add(TrashBin trashBin) {trashBins.add(trashBin);}
-    public TrashBin get(int index) { return trashBins.get(index);}
+
+    public int getCount() {
+        return trashBins.size();
+    }
+
+    public void add(TrashBin trashBin) {
+        trashBins.add(trashBin);
+    }
+
+    public TrashBin get(int index) {
+        return trashBins.get(index);
+    }
 
 
     @Override
@@ -184,6 +228,16 @@ class Street implements LocatingElement {
 
         }
         System.out.println(name);
+    }
+
+    @Override
+    public void Traverse(TruckDriver truckDriver, String type) {
+        if (type.equals("M")) {
+            truckDriver.EmptyFullMedicalBins(this);
+        }
+        if (type.equals("G")) {
+            truckDriver.EmptyFullGeneralBins(this);
+        }
     }
 
     @Override

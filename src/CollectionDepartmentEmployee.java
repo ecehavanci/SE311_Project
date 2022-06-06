@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 //Client
@@ -16,10 +15,18 @@ public class CollectionDepartmentEmployee {
         this.ID = ID;
     }
 
-    public void CreateCollectionOrder(TruckDriver driver, TruckScreen screen) {
-        Order collectionOrder = new CollectionOrder(driver);
-        System.out.println("Waste collection order is created. Waiting for truck driver...");
-        screen.TransmitOrder(collectionOrder);
+    public void CreateCollectionOrder(TruckDriver driver, TruckScreen screen, String type) {
+        if (type.equals("M")) {
+            Order collectionOrder = new MedicalCollectionOrder(driver);
+            System.out.println("Medical waste collection order is created. Waiting for truck driver...");
+            screen.TransmitOrder(collectionOrder);
+        }
+        if (type.equals("G")) {
+            Order collectionOrder = new GeneralCollectionOrder(driver);
+            System.out.println("General waste collection order is created. Waiting for truck driver...");
+            screen.TransmitOrder(collectionOrder);
+        }
+
     }
 
 }
@@ -28,6 +35,7 @@ public class CollectionDepartmentEmployee {
 class WasteCollectionDepartment {
     //ArrayList<CollectionDepartmentEmployee> employees = new ArrayList<>();
 
+
     public WasteCollectionDepartment(CollectionDepartmentEmployee employee) {
         this.employee = employee;
     }
@@ -35,7 +43,6 @@ class WasteCollectionDepartment {
     //This is the person who is in charge in the Collection Department
     CollectionDepartmentEmployee employee;
     ArrayList<TruckDriver> truckDrivers = new ArrayList<>();
-    ArrayList<Truck> trucks = new ArrayList<>();
 
 
     private int m_collectionNeedingBinCounter = 0;
@@ -52,47 +59,57 @@ class WasteCollectionDepartment {
 
     }
 
-    public void AddTruck(Truck truck) {
+    /*public void AddTruck(Truck truck) {
         trucks.add(truck);
-    }
+    }*/
 
     public void M_DecideIfGarbageCollectionNeeded() {
-        m_collectionNeedingBinCounter = DecideIfGarbageCollectionNeeded(m_collectionNeedingBinCounter);
-    }
+        m_collectionNeedingBinCounter++;
 
-    public void G_DecideIfGarbageCollectionNeeded() {
-        g_collectionNeedingBinCounter = DecideIfGarbageCollectionNeeded(g_collectionNeedingBinCounter);
-    }
-
-    public int DecideIfGarbageCollectionNeeded(int collectionNeedingBinCounter) {
-        collectionNeedingBinCounter++;
-
-        if (employee == null || truckDrivers.size() == 0 || trucks.size() == 0) {
+        if (employee == null || truckDrivers.size() == 0) {
             System.out.println("Garbage collection failed due to source problems.");
-        } else if (collectionNeedingBinCounter >= 4) {
+        } else if (m_collectionNeedingBinCounter >= 4) {
             System.out.println("4 or more trash bins are at least 80% full. Starting Collection...");
             Random random = new Random();//This is for selecting a random employee and a random truck
             //int empNum = random.nextInt(employees.size());
             int driverNum = random.nextInt(truckDrivers.size());
-            int truckNum = random.nextInt(trucks.size());
 
-            employee.CreateCollectionOrder(truckDrivers.get(driverNum), trucks.get(truckNum).getTruckScreen());
-            collectionNeedingBinCounter=0;
+            employee.CreateCollectionOrder(truckDrivers.get(driverNum), truckDrivers.get(driverNum).getTruck().getTruckScreen(), "M");
+            m_collectionNeedingBinCounter = 0;
         }
-        return collectionNeedingBinCounter;
     }
 
+    public void G_DecideIfGarbageCollectionNeeded() {
+        g_collectionNeedingBinCounter++;
 
+        if (employee == null || truckDrivers.size() == 0) {
+            System.out.println("Garbage collection failed due to source problems.");
+        } else if (g_collectionNeedingBinCounter >= 4) {
+            System.out.println("4 or more trash bins are at least 80% full. Starting Collection...");
+            Random random = new Random();//This is for selecting a random truck driver
+            //int empNum = random.nextInt(employees.size());
+            int driverNum = random.nextInt(truckDrivers.size());
+
+            employee.CreateCollectionOrder(truckDrivers.get(driverNum), truckDrivers.get(driverNum).getTruck().getTruckScreen(), "G");
+            g_collectionNeedingBinCounter = 0;
+        }
+    }
 }
 
 //This class is for TruckScreen, because it is not logical to have a truckScreen out of nowhere
 class Truck {
     private final TruckScreen truckScreen = new TruckScreen();
+    private int fullnessLevel;
+
+    void addTrash(double trashAmount) {
+        fullnessLevel += trashAmount;
+    }
 
     public TruckScreen getTruckScreen() {
         return truckScreen;
     }
 }
+
 
 //Invoker
 class TruckScreen {
@@ -107,16 +124,31 @@ interface Order {
 }
 
 //ConcreteCommand
-class CollectionOrder implements Order {
+class MedicalCollectionOrder implements Order {
     TruckDriver truckDriver;
 
-    public CollectionOrder(TruckDriver truckDriver) {
+    public MedicalCollectionOrder(TruckDriver truckDriver) {
         this.truckDriver = truckDriver;
     }
 
     @Override
     public void Execute() {
-        truckDriver.CollectWaste();
+        truckDriver.CollectMedicalWaste();
+        truckDriver.EmptyTruck();
+
+    }
+}
+
+class GeneralCollectionOrder implements Order {
+    TruckDriver truckDriver;
+
+    public GeneralCollectionOrder(TruckDriver truckDriver) {
+        this.truckDriver = truckDriver;
+    }
+
+    @Override
+    public void Execute() {
+        truckDriver.CollectGeneralWaste();
         truckDriver.EmptyTruck();
 
     }
@@ -129,22 +161,69 @@ class TruckDriver {
     private String surname;
     private int age;
     private int ID;
+    private LocatingElement city;
+    private Truck truck;
 
-    public TruckDriver(String name, String surname, int age, int ID) {
+    public TruckDriver(String name, String surname, int age, int ID, LocatingElement city, Truck truck) {
         this.name = name;
         this.surname = surname;
         this.age = age;
         this.ID = ID;
+        this.city = city;
+        this.truck = truck;
     }
 
-    public void CollectWaste() {//
-        System.out.println("Collecting waste...");
-        //TODO: Iterator: Collect waste from all bins 80 percent or more full
-       /* for(i.First();  !i.IsDone(); i.Next()) {
-            System.out.println(i.CurrentTrashBin().getName());
-        }
-        System.out.println();*/
+    public void CollectMedicalWaste() {
 
+        System.out.println("Truck driver drives through streets...");
+        //TODO: Iterator: Collect waste from all bins 80 percent or more full
+        city.Traverse(this, "M");
+    }
+
+    public void CollectGeneralWaste() {
+
+        System.out.println("Truck driver drives through streets...");
+        //TODO: Iterator: Collect waste from all bins 80 percent or more full
+        city.Traverse(this, "G");
+    }
+
+    public void EmptyFullMedicalBins(Street street) {
+        Iterator streetIterator = new StreetIterator(street);
+        for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
+            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: "  : "General thrash bin: ");
+            System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().fullnessLevel);
+            if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
+                if (streetIterator.CurrentTrashBin().getToken().equals("M")) {
+                    System.out.println("Emptying bin...");
+                    truck.addTrash(streetIterator.CurrentTrashBin().getFullnessLevel());
+                    streetIterator.CurrentTrashBin().setFullnessLevel(0);
+                } else {
+                    System.out.println("Skipping general trash bin...");
+                }
+            } else {
+                System.out.println("Skipping bin...");
+            }
+        }
+    }
+
+    public void EmptyFullGeneralBins(Street street) {
+        Iterator streetIterator = new StreetIterator(street);
+        for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
+            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: "  : "General thrash bin: ");
+            System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().fullnessLevel);
+            if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
+                if (streetIterator.CurrentTrashBin().getToken().equals("G")) {
+                    System.out.println("Emptying bin...");
+                    truck.addTrash(streetIterator.CurrentTrashBin().getFullnessLevel());
+                    streetIterator.CurrentTrashBin().setFullnessLevel(0);
+                } else {
+                    System.out.println("Skipping medical trash bin...");
+
+                }
+            } else {
+                System.out.println("Skipping bin...");
+            }
+        }
     }
 
     public void EmptyTruck() {
@@ -159,5 +238,7 @@ class TruckDriver {
 
     }
 
-
+    public Truck getTruck() {
+        return truck;
+    }
 }

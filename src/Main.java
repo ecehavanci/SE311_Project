@@ -17,19 +17,15 @@ public class Main {
         //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("Cheryll", "Livingston", 27, 1002));
         //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("John", "Hatter", 59, 1003));
 
-        IzmirWCD.AddTruckDriver(new TruckDriver("Scarlet", "Roseland", 60, 1000));
-        IzmirWCD.AddTruckDriver(new TruckDriver("Luis", "Williams", 22, 1001));
-        IzmirWCD.AddTruckDriver(new TruckDriver("Alice", "King", 36, 1002));
-        IzmirWCD.AddTruckDriver(new TruckDriver("Edgar", "Johns", 42, 1003));
-
-        IzmirWCD.AddTruck(new Truck());
-        IzmirWCD.AddTruck(new Truck());
-        IzmirWCD.AddTruck(new Truck());
-        IzmirWCD.AddTruck(new Truck());
-
         //TODO: I had to change the two on below to City from LocationContainer to City (first part), it needs discussion
         LocatingElement Izmir = new City("Izmir", IzmirWCD);
         LocatingElement Eskisehir = new City("Eskisehir", new WasteCollectionDepartment(new CollectionDepartmentEmployee("Gerard", "Greene", 33, 1007)));
+
+        IzmirWCD.AddTruckDriver(new TruckDriver("Scarlet", "Roseland", 60, 1000,Izmir, new Truck()));
+        IzmirWCD.AddTruckDriver(new TruckDriver("Luis", "Williams", 22, 1001, Izmir, new Truck()));
+        IzmirWCD.AddTruckDriver(new TruckDriver("Alice", "King", 36, 1002, Izmir, new Truck()));
+        IzmirWCD.AddTruckDriver(new TruckDriver("Edgar", "Johns", 42, 1003, Izmir, new Truck()));
+
 
         System.out.println("SETTING UP ENVIRONMENT");
         Street s165 = new Street("165 Street");
