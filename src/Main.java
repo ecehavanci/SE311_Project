@@ -1,15 +1,8 @@
 import java.util.Random;
 
+//OBSERVER -> COMMAND -> COMPOSITE -> ITERATOR -> ABSTRACT FACTORY
 public class Main {
     public static void main(String[] args) {
-        //Trying command pattern:
-        /*WasteCollectionDepartment wasteCollectionDepartment = new WasteCollectionDepartment();
-        CollectionDepartmentEmployee employee = new CollectionDepartmentEmployee();
-        TruckDriver truckDriver = new TruckDriver();
-        TruckScreen truckScreen = new TruckScreen();
-        employee.CreateCollectionOrder(truckDriver, truckScreen);*/
-
-        //Trying Composite Pattern:
 
         WasteCollectionDepartment IzmirWCD = new WasteCollectionDepartment(new CollectionDepartmentEmployee("John", "Hatter", 59, 1009), new WasteDecomposer());
         //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee( "Marylynne", "Buttons",45, 1000));
@@ -171,10 +164,6 @@ public class Main {
 
         outputInformation("\nAdding trash to bin 3: Izmir - Medical trash bin...");
         s166.GetTrashBin(0).AddTrash(9,72);
-
-
-
-
 
 
     }

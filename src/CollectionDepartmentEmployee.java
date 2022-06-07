@@ -231,9 +231,11 @@ class TruckDriver {
 
     public void EmptyFullMedicalBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
+
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
             System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: " : "General thrash bin: ");
             System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().getFullnessLevel());
+
             if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
                 if (streetIterator.CurrentTrashBin().getToken().equals("M")) {
                     System.out.println("Emptying bin...");
