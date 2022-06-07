@@ -234,6 +234,10 @@ class TruckDriver {
     public void EmptyFullMedicalBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
 
+        //For Medical Bins
+        //It is checked whether it is a medical waste bin or a general bin.
+        // Then if the trash is above 80%, it performs the emptying process.
+        // If it is below 80%, the trash bin is passed without being emptied.
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
             System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: " : "General thrash bin: ");
             System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().getFullnessLevel());
@@ -252,7 +256,10 @@ class TruckDriver {
         }
     }
 
-    //empties general bins of given streets
+    //For General Bins
+    //It is checked whether it is a medical waste bin or a general bin.
+    // Then if the trash is above 80%, it performs the emptying process.
+    // If it is below 80%, the trash bin is passed without being emptied.
     public void EmptyFullGeneralBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {

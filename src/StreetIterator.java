@@ -7,16 +7,23 @@ import java.util.ArrayList;
 
 //Abstract Iterator
 interface Iterator {
+
+    //First element in the list
     void First();
 
+    //Allows us to move to the next elements in the list
     void Next();
 
+    //Checks that all list items are all traversed.
     Boolean IsDone();
 
+    //It gives the information on which element we are on while traversing the list.
     TrashBin CurrentTrashBin();
 }
 
 //Concrete Iterator
+//Implements the Iterator interface.
+//Keeps track of the current position in the traversal.
 public class StreetIterator implements Iterator {
     private Street street;
     private int current;
@@ -124,7 +131,9 @@ abstract class TrashBin {
 
 //-------------------------COMMON AREA----------------------------
 
-//ITERATOR: Concrete Aggregate ------- COMPOSITE: Leaf
+//ITERATOR: Concrete Aggregate
+//Implements the Iterator creation interface to return an instance of the proper ConcreteIterator.
+// ------- COMPOSITE: Leaf
 class Street implements LocatingElement {
     private String name;
 
@@ -132,6 +141,7 @@ class Street implements LocatingElement {
         this.name = name;
     }
 
+    //Maintains a list of Trash Bins
     private ArrayList<TrashBin> trashBins = new ArrayList<>();
 
     public void AddTrashBin(TrashBin bin) {
@@ -147,13 +157,16 @@ class Street implements LocatingElement {
         return new StreetIterator(this);
     }
 
+
     public int getCount() {
         return trashBins.size();
     }
 
+    //Adds a new Trash Bin to the list
     public void add(TrashBin trashBin) {
         trashBins.add(trashBin);
     }
+
 
     public TrashBin get(int index) {
         return trashBins.get(index);
