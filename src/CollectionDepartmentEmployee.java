@@ -49,20 +49,17 @@ class WasteDecomposer {
 
 //There is a Waste Collection Department in the City which as employees in it
 class WasteCollectionDepartment {
-    CollectionDepartmentEmployee employee; //This is the person who is in charge in the Collection Department
-    WasteDecomposer wasteDecomposer;
-
+        private WasteDecomposer wasteDecomposer;
+    //This is the person who is in charge in the Collection Department
+    private CollectionDepartmentEmployee employee;
+    private ArrayList<TruckDriver> truckDrivers = new ArrayList<>();
     private int m_collectionNeedingBinCounter = 0;
     private int g_collectionNeedingBinCounter = 0;
-
-    ArrayList<TruckDriver> truckDrivers = new ArrayList<>();
-
 
     public WasteCollectionDepartment(CollectionDepartmentEmployee employee, WasteDecomposer wasteDecomposer) {
         this.employee = employee;
         this.wasteDecomposer = wasteDecomposer;
     }
-
     //adds truck driver to waste collection department
     public void AddTruckDriver(TruckDriver driver) {
         truckDrivers.add(driver);
