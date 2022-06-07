@@ -101,21 +101,6 @@ class City extends LocationContainer {
     //city uses Landfills
     //private ArrayList<Waste> wastes;
 
-    /*public City(String name) {
-        super(name);
-    }*/
-
-    /*public void createLandfill(Landfill landfill) {
-        wastes = new ArrayList<>();
-        wastes.add(landfill.decomposeRecyclableWaste());
-        wastes.add(landfill.decomposeNonRecyclableWaste());
-    }*/
-
-    /*void displayLandfillParts() {
-        System.out.println("\tListing Wastes\n\t-------------");
-        wastes.forEach(waste -> waste.printAllInfo());
-    }*/
-
     @Override
     public MedicalLandfill getMedicalLandfill() {
         return medicalLandfill;

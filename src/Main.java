@@ -11,10 +11,6 @@ public class Main {
     public static void main(String[] args) {
 
         WasteCollectionDepartment IzmirWCD = new WasteCollectionDepartment(new CollectionDepartmentEmployee("John", "Hatter", 59, 1009), new WasteDecomposer());
-        //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee( "Marylynne", "Buttons",45, 1000));
-        //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("Gerard", "Greene", 33, 1001));
-        //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("Cheryll", "Livingston", 27, 1002));
-        //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("John", "Hatter", 59, 1003));
 
         //TODO: I had to change the two on below to City from LocationContainer to City (first part), it needs discussion
         LocatingElement Izmir = new City("Izmir", IzmirWCD, new MedicalLandfill(), new GeneralLandfill(), new GeneralLandfill());
