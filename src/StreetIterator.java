@@ -44,7 +44,7 @@ public class StreetIterator implements Iterator {
 }
 
 
-//ITERATOR: Item --------- OBSERVER: Subject
+//ITERATOR: Item --------- SUBJECT: TrashBin
 abstract class TrashBin {
     //Every trash bin knows about the Waste Collection Department they are going to notify when bin is 80% full
     WasteCollectionDepartment WCD;
@@ -171,6 +171,7 @@ class GeneralTrashBin extends TrashBin {
     }
 }
 
+//Observer
 interface Observer {
     public void M_Update(TrashBin trashBin);
 
