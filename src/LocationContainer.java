@@ -13,6 +13,10 @@ interface LocatingElement {
 
     //TODO: WARNING VERY UNSURE ABOUT THAT
     WasteCollectionDepartment getWCD();
+
+    MedicalLandfill getMedicalLandfill() throws LandfillNotFoundException;
+
+    GeneralLandfill[] getGeneralLandfills() throws LandfillNotFoundException;
 }
 
 //Composite Object
@@ -36,13 +40,13 @@ public class LocationContainer implements LocatingElement {
 
     @Override
     public void Display(int indent) {
-        for (int i = 0; i < indent+1 ; i++) {
+        for (int i = 0; i < indent + 1; i++) {
             System.out.print("-");
         }
 
         System.out.println(name);
         for (int i = 0; i < locationList.size(); i++) {
-            locationList.get(i).Display(indent+1);
+            locationList.get(i).Display(indent + 1);
         }
     }
 
@@ -57,6 +61,16 @@ public class LocationContainer implements LocatingElement {
     public WasteCollectionDepartment getWCD() {
         return null;
     }
+
+    @Override
+    public MedicalLandfill getMedicalLandfill() throws LandfillNotFoundException {
+        throw new LandfillNotFoundException();
+    }
+
+    @Override
+    public GeneralLandfill[] getGeneralLandfills() throws LandfillNotFoundException {
+        throw new LandfillNotFoundException();
+    }
 }
 
 //Leaf is in StreetIterator.java
@@ -69,9 +83,12 @@ class City extends LocationContainer {
     private GeneralLandfill generalLandfill1;
     private GeneralLandfill generalLandfill2;
 
-    public City(String name, WasteCollectionDepartment WCD) {
+    public City(String name, WasteCollectionDepartment WCD, MedicalLandfill medicalLandfill, GeneralLandfill generalLandfill1, GeneralLandfill generalLandfill2) {
         super(name);
         this.WCD = WCD;
+        this.medicalLandfill = medicalLandfill;
+        this.generalLandfill1 = generalLandfill1;
+        this.generalLandfill2 = generalLandfill2;
     }
 
     public WasteCollectionDepartment getWCD() {
@@ -82,21 +99,31 @@ class City extends LocationContainer {
 
     //comes from abstract factory pattern, city is the client
     //city uses Landfills
-    private ArrayList<Waste> wastes;
+    //private ArrayList<Waste> wastes;
 
-    public City(String name) {
+    /*public City(String name) {
         super(name);
-    }
+    }*/
 
-    public void createLandfill(Landfill landfill) {
+    /*public void createLandfill(Landfill landfill) {
         wastes = new ArrayList<>();
-        wastes.add(landfill.collectRecyclableWaste());
-        wastes.add(landfill.collectNonRecyclableWaste());
-    }
+        wastes.add(landfill.decomposeRecyclableWaste());
+        wastes.add(landfill.decomposeNonRecyclableWaste());
+    }*/
 
-    void displayLandfillParts() {
+    /*void displayLandfillParts() {
         System.out.println("\tListing Wastes\n\t-------------");
         wastes.forEach(waste -> waste.printAllInfo());
+    }*/
+
+    @Override
+    public MedicalLandfill getMedicalLandfill() {
+        return medicalLandfill;
+    }
+
+    @Override
+    public GeneralLandfill[] getGeneralLandfills() {
+        return new GeneralLandfill[]{generalLandfill1, generalLandfill2};
     }
 }
 
@@ -112,5 +139,19 @@ class Neighborhood extends LocationContainer {
         System.out.println("Neighborhoods do not have Waste Collection department");
         return super.getWCD();
     }
+
+    @Override
+    public MedicalLandfill getMedicalLandfill() throws LandfillNotFoundException {
+        throw new LandfillNotFoundException();
+    }
+
+    @Override
+    public GeneralLandfill[] getGeneralLandfills() throws LandfillNotFoundException {
+        throw new LandfillNotFoundException();
+    }
+}
+
+class LandfillNotFoundException extends Exception {
+
 }
 

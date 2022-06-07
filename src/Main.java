@@ -11,15 +11,15 @@ public class Main {
 
         //Trying Composite Pattern:
 
-        WasteCollectionDepartment IzmirWCD = new WasteCollectionDepartment(new CollectionDepartmentEmployee("John", "Hatter", 59, 1009));
+        WasteCollectionDepartment IzmirWCD = new WasteCollectionDepartment(new CollectionDepartmentEmployee("John", "Hatter", 59, 1009), new WasteDecomposer());
         //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee( "Marylynne", "Buttons",45, 1000));
         //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("Gerard", "Greene", 33, 1001));
         //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("Cheryll", "Livingston", 27, 1002));
         //IzmirWCD.AddEmployee(new CollectionDepartmentEmployee("John", "Hatter", 59, 1003));
 
         //TODO: I had to change the two on below to City from LocationContainer to City (first part), it needs discussion
-        LocatingElement Izmir = new City("Izmir", IzmirWCD);
-        LocatingElement Eskisehir = new City("Eskisehir", new WasteCollectionDepartment(new CollectionDepartmentEmployee("Gerard", "Greene", 33, 1007)));
+        LocatingElement Izmir = new City("Izmir", IzmirWCD,new MedicalLandfill(),new GeneralLandfill(),new GeneralLandfill());
+        LocatingElement Eskisehir = new City("Eskisehir", new WasteCollectionDepartment(new CollectionDepartmentEmployee("Gerard", "Greene", 33, 1007), new WasteDecomposer()),new MedicalLandfill(),new GeneralLandfill(),new GeneralLandfill());
 
         IzmirWCD.AddTruckDriver(new TruckDriver("Scarlet", "Roseland", 60, 1000,Izmir, new Truck()));
         IzmirWCD.AddTruckDriver(new TruckDriver("Luis", "Williams", 22, 1001, Izmir, new Truck()));
@@ -42,6 +42,8 @@ public class Main {
 
         s167.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
         s167.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
+        s167.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
+
 
         s168.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
 
@@ -55,6 +57,8 @@ public class Main {
 
         s167.GetTrashBin(0).Attach(new Sensor());
         s167.GetTrashBin(1).Attach(new Sensor());
+        s167.GetTrashBin(2).Attach(new Sensor());
+
 
         s168.GetTrashBin(0).Attach(new Sensor());
 
@@ -76,6 +80,7 @@ public class Main {
 
         s44.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
         s44.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
+
 
 
         s42.GetTrashBin(0).Attach(new Sensor());
@@ -127,37 +132,46 @@ public class Main {
 
         outputInformation("\n - DEMONSTRATING ADDING TRASH TO TRASH BINS - \n");
         outputInformation("Adding trash to bin 1: Izmir - Medical trash bin...");
-        s165.GetTrashBin(0).AddTrash(13);
-        s165.GetTrashBin(0).AddTrash(12);
-        s165.GetTrashBin(0).AddTrash(5);
-        s165.GetTrashBin(0).AddTrash(32);
-        s165.GetTrashBin(0).AddTrash(6);
-        s165.GetTrashBin(0).AddTrash(10);
-        s165.GetTrashBin(0).AddTrash(16);
+        s165.GetTrashBin(0).AddTrash(13, 10);
+        s165.GetTrashBin(0).AddTrash(12,20);
+        s165.GetTrashBin(0).AddTrash(5,2);
+        s165.GetTrashBin(0).AddTrash(12,13);
+        s165.GetTrashBin(0).AddTrash(6,17);
 
         outputInformation("\nAdding trash to bin 2: Izmir - General trash bin...");
-        s165.GetTrashBin(1).AddTrash(79);
-        s165.GetTrashBin(1).AddTrash(1);
+        s165.GetTrashBin(1).AddTrash(65,3);
+        s165.GetTrashBin(1).AddTrash(3,8);
+        s165.GetTrashBin(1).AddTrash(0,1);
+
 
 
 
         outputInformation("\nAdding trash to bin 3: Izmir - Medical trash bin...");
-        s166.GetTrashBin(0).AddTrash(90);
+        s166.GetTrashBin(0).AddTrash(90,72);
 
         outputInformation("\nAdding trash to bin 4: Izmir - General trash bin...");
-        s166.GetTrashBin(1).AddTrash(95);
+        s166.GetTrashBin(1).AddTrash(55,32);
 
         outputInformation("\nAdding trash to bin 5: Izmir - General trash bin...");
-        s166.GetTrashBin(2).AddTrash(91);
+        s166.GetTrashBin(2).AddTrash(20,21);
 
         outputInformation("\nAdding trash to bin 6: Izmir - General trash bin...");
-        s167.GetTrashBin(0).AddTrash(94);
+        s167.GetTrashBin(0).AddTrash(94,1);
 
         outputInformation("\nAdding trash to bin 7: Izmir - General trash bin...");
-        s167.GetTrashBin(1).AddTrash(96);
+        s167.GetTrashBin(1).AddTrash(63,22);
 
         outputInformation("\nAdding trash to bin 8: Izmir - Medical trash bin...");
-        s168.GetTrashBin(0).AddTrash(92);
+        s167.GetTrashBin(2).AddTrash(11,23);
+        s167.GetTrashBin(2).AddTrash(40,3);
+        s167.GetTrashBin(2).AddTrash(5,7);
+
+        outputInformation("\nAdding trash to bin 9: Izmir - Medical trash bin...");
+        s168.GetTrashBin(0).AddTrash(92,1);
+
+        outputInformation("\nAdding trash to bin 3: Izmir - Medical trash bin...");
+        s166.GetTrashBin(0).AddTrash(9,72);
+
 
 
 

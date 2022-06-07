@@ -51,7 +51,8 @@ abstract class TrashBin {
     //Although in observer pattern there can be many observers, in this project every thrash bin has only one sensor.
     //So there is a list of observers but only one observer can be attached to the trash bin
     ArrayList<Sensor> sensors = new ArrayList<>();
-    protected double fullnessLevel;
+    protected double nonRecyclableWasteLevel;
+    protected double recyclableWasteLevel;
 
     //Token is for identifying if it is general or medical later
     protected String token;
@@ -94,19 +95,28 @@ abstract class TrashBin {
         }
     }
 
-    public void setFullnessLevel(double fullnessLevel) {
-        this.fullnessLevel = fullnessLevel;
+    public void resetFullnessLevel() {
+        recyclableWasteLevel = 0;
+        nonRecyclableWasteLevel = 0;
     }
 
     public double getFullnessLevel() {
-        return fullnessLevel;
+        return (recyclableWasteLevel + nonRecyclableWasteLevel);
     }
 
     public String getToken() {
         return token;
     }
 
-    public abstract void AddTrash(double trashAmount);
+    public abstract void AddTrash(double recyclableTrashAmount, double nonRecyclableTrashAmount);
+
+    public double getNonRecyclableWasteLevel() {
+        return nonRecyclableWasteLevel;
+    }
+
+    public double getRecyclableWasteLevel() {
+        return recyclableWasteLevel;
+    }
 }
 
 //ConcreteSubject 1
@@ -116,15 +126,21 @@ class MedicalTrashBin extends TrashBin {
         token = "M";
     }
 
-    public void AddTrash(double trashAmount) {
-        if (fullnessLevel + trashAmount <= 100) {
-            fullnessLevel += trashAmount;
-            System.out.println("Thrash added. Current fullness level: " + fullnessLevel);
-            if (fullnessLevel >= 80) {
-                Notify('M');//"M" stands for medical trash bin
-            }
+    public void AddTrash(double recyclableTrashAmount, double nonRecyclableTrashAmount) {
+        if (recyclableTrashAmount + nonRecyclableTrashAmount > 100) {
+            System.out.println("Invalid amount of thrash");
         } else {
-            System.out.println("Bin is full.");
+            if (recyclableTrashAmount + nonRecyclableTrashAmount + this.recyclableWasteLevel + this.nonRecyclableWasteLevel < 100) {
+                recyclableWasteLevel += recyclableTrashAmount;
+                nonRecyclableWasteLevel += nonRecyclableTrashAmount;
+
+                System.out.println("Thrash added. Current fullness level: " + (recyclableWasteLevel + nonRecyclableWasteLevel));
+                if (recyclableWasteLevel + nonRecyclableWasteLevel >= 80) {
+                    Notify('M');//"M" stands for general trash bin
+                }
+            } else {
+                System.out.println("Bin is full.");
+            }
         }
     }
 }
@@ -136,15 +152,21 @@ class GeneralTrashBin extends TrashBin {
         token = "G";
     }
 
-    public void AddTrash(double trashAmount) {
-        if (fullnessLevel + trashAmount < 100) {
-            fullnessLevel += trashAmount;
-            System.out.println("Thrash added. Current fullness level: " + fullnessLevel);
-            if (fullnessLevel >= 80) {
-                Notify('G');//"G" stands for general trash bin
-            }
+    public void AddTrash(double recyclableTrashAmount, double nonRecyclableTrashAmount) {
+        if (recyclableTrashAmount + nonRecyclableTrashAmount > 100) {
+            System.out.println("Invalid amount of thrash");
         } else {
-            System.out.println("Bin is full.");
+            if (recyclableTrashAmount + nonRecyclableTrashAmount + this.recyclableWasteLevel + this.nonRecyclableWasteLevel < 100) {
+                recyclableWasteLevel += recyclableTrashAmount;
+                nonRecyclableWasteLevel += nonRecyclableTrashAmount;
+
+                System.out.println("Thrash added. Current fullness level: " + (recyclableWasteLevel + nonRecyclableWasteLevel));
+                if (recyclableWasteLevel + nonRecyclableWasteLevel >= 80) {
+                    Notify('G');//"G" stands for general trash bin
+                }
+            } else {
+                System.out.println("Bin is full.");
+            }
         }
     }
 }
@@ -244,5 +266,15 @@ class Street implements LocatingElement {
     public WasteCollectionDepartment getWCD() {
         System.out.println("Streets do not have a waste collection department");
         return null;
+    }
+
+    @Override
+    public MedicalLandfill getMedicalLandfill() throws LandfillNotFoundException {
+        throw new LandfillNotFoundException();
+    }
+
+    @Override
+    public GeneralLandfill[] getGeneralLandfills() throws LandfillNotFoundException {
+        throw new LandfillNotFoundException();
     }
 }

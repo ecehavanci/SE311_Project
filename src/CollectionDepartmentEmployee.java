@@ -28,16 +28,32 @@ public class CollectionDepartmentEmployee {
         }
 
     }
+}
 
+class WasteDecomposer {
+    void Decompose(Landfill landfill, Truck truck) {
+        RecyclableWaste wasteR = landfill.decomposeRecyclableWaste(truck.getRecyclableWasteAmount());
+        NonRecyclableWaste wasteN = landfill.decomposeNonRecyclableWaste(truck.getNonRecyclableWasteAmount());
+
+        landfill.addWaste(wasteR);
+        landfill.addWaste(wasteN);
+
+        System.out.println("Waste Decomposed.");
+
+        System.out.println("\u001B[32m" + "Decomposed recyclable waste amount: " + landfill.getRecyclableWaste() + "\u001B[0m\t");
+        System.out.println("\u001B[32m" + "Decomposed non-recyclable waste amount: " + landfill.getNonRecyclableWaste() + "\u001B[0m\t");
+    }
 }
 
 //There is a Waste Collection Department in the City which as employees in it
 class WasteCollectionDepartment {
     //ArrayList<CollectionDepartmentEmployee> employees = new ArrayList<>();
 
+    WasteDecomposer wasteDecomposer;
 
-    public WasteCollectionDepartment(CollectionDepartmentEmployee employee) {
+    public WasteCollectionDepartment(CollectionDepartmentEmployee employee, WasteDecomposer wasteDecomposer) {
         this.employee = employee;
+        this.wasteDecomposer = wasteDecomposer;
     }
 
     //This is the person who is in charge in the Collection Department
@@ -94,19 +110,43 @@ class WasteCollectionDepartment {
             g_collectionNeedingBinCounter = 0;
         }
     }
+
+    public void DecomposeWaste(Landfill landfill, Truck truck) {
+        wasteDecomposer.Decompose(landfill, truck);
+    }
 }
 
 //This class is for TruckScreen, because it is not logical to have a truckScreen out of nowhere
 class Truck {
     private final TruckScreen truckScreen = new TruckScreen();
-    private int fullnessLevel;
+    private double nonRecyclableWasteAmount;
+    private double recyclableWasteAmount;
 
-    void addTrash(double trashAmount) {
-        fullnessLevel += trashAmount;
+
+    void addTrash(double recyclableWasteAmount, double nonRecyclableWasteAmount) {
+        this.recyclableWasteAmount += recyclableWasteAmount;
+        this.nonRecyclableWasteAmount += nonRecyclableWasteAmount;
+    }
+
+    public double getWasteAmount() {
+        return nonRecyclableWasteAmount + recyclableWasteAmount;
+    }
+
+    public double getNonRecyclableWasteAmount() {
+        return nonRecyclableWasteAmount;
+    }
+
+    public double getRecyclableWasteAmount() {
+        return recyclableWasteAmount;
     }
 
     public TruckScreen getTruckScreen() {
         return truckScreen;
+    }
+
+    public void resetWasteAmount() {
+        nonRecyclableWasteAmount = 0;
+        recyclableWasteAmount = 0;
     }
 }
 
@@ -134,7 +174,7 @@ class MedicalCollectionOrder implements Order {
     @Override
     public void Execute() {
         truckDriver.CollectMedicalWaste();
-        truckDriver.EmptyTruck();
+        truckDriver.EmptyTruckToMedicalLandfill();
 
     }
 }
@@ -149,7 +189,7 @@ class GeneralCollectionOrder implements Order {
     @Override
     public void Execute() {
         truckDriver.CollectGeneralWaste();
-        truckDriver.EmptyTruck();
+        truckDriver.EmptyTruckToGeneralLandfill();
 
     }
 }
@@ -174,29 +214,31 @@ class TruckDriver {
     }
 
     public void CollectMedicalWaste() {
-
+        System.out.println("\u001B[35m" + "WASTE COLLECTION BEGINNING: Truck current waste amount: " + truck.getWasteAmount() + "\u001B[0m");
         System.out.println("Truck driver drives through streets...");
-        //TODO: Iterator: Collect waste from all bins 80 percent or more full
         city.Traverse(this, "M");
+        System.out.println("\u001B[35m" + "WASTE COLLECTION END: Truck current waste amount: " + truck.getWasteAmount() + "\u001B[0m");
+
     }
 
     public void CollectGeneralWaste() {
-
         System.out.println("Truck driver drives through streets...");
-        //TODO: Iterator: Collect waste from all bins 80 percent or more full
+        System.out.println("\u001B[35m" + "WASTE COLLECTION BEGINNING: Truck current waste amount: " + truck.getWasteAmount() + "\u001B[0m");
         city.Traverse(this, "G");
+        System.out.println("\u001B[35m" + "WASTE COLLECTION END: Truck current waste amount: " + truck.getWasteAmount() + "\u001B[0m");
+
     }
 
     public void EmptyFullMedicalBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
-            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: "  : "General thrash bin: ");
-            System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().fullnessLevel);
+            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: " : "General thrash bin: ");
+            System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().getFullnessLevel());
             if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
                 if (streetIterator.CurrentTrashBin().getToken().equals("M")) {
                     System.out.println("Emptying bin...");
-                    truck.addTrash(streetIterator.CurrentTrashBin().getFullnessLevel());
-                    streetIterator.CurrentTrashBin().setFullnessLevel(0);
+                    truck.addTrash(streetIterator.CurrentTrashBin().getRecyclableWasteLevel(), streetIterator.CurrentTrashBin().getNonRecyclableWasteLevel());
+                    streetIterator.CurrentTrashBin().resetFullnessLevel();
                 } else {
                     System.out.println("Skipping general trash bin...");
                 }
@@ -209,13 +251,15 @@ class TruckDriver {
     public void EmptyFullGeneralBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
-            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: "  : "General thrash bin: ");
-            System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().fullnessLevel);
+            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: " : "General thrash bin: ");
+            System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().getFullnessLevel());
             if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
                 if (streetIterator.CurrentTrashBin().getToken().equals("G")) {
                     System.out.println("Emptying bin...");
-                    truck.addTrash(streetIterator.CurrentTrashBin().getFullnessLevel());
-                    streetIterator.CurrentTrashBin().setFullnessLevel(0);
+                    //System.out.println("Amount od thrash to be added to truck: " + streetIterator.CurrentTrashBin().getRecyclableWasteLevel() + "+" +  streetIterator.CurrentTrashBin().getNonRecyclableWasteLevel() + "=" +
+                    //(streetIterator.CurrentTrashBin().getRecyclableWasteLevel()+ streetIterator.CurrentTrashBin().getNonRecyclableWasteLevel()));
+                    truck.addTrash(streetIterator.CurrentTrashBin().getRecyclableWasteLevel(), streetIterator.CurrentTrashBin().getNonRecyclableWasteLevel());
+                    streetIterator.CurrentTrashBin().resetFullnessLevel();
                 } else {
                     System.out.println("Skipping medical trash bin...");
 
@@ -226,16 +270,58 @@ class TruckDriver {
         }
     }
 
-    public void EmptyTruck() {
+    public void EmptyTruckToMedicalLandfill() {
         System.out.println("Driving to facility...");
-        System.out.println("Emptying...");
+        System.out.println("Emptying to Medical Landfill and decomposing to recyclable and non-recyclable waste...");
         //TODO: Empty Truck to one of the landfills but how to separate general waste from medical waste?
         //Do we collect waste seperated? For example a trash bin in front of a hospital would be considered medical
         //waste. Will we label trash bins as "medical" and "general"? If so will there be medical waste trucks and
         //general waste trucks? Or will there be only one type of truck with two waste collecting orders:
         //CollectMedicalWaste and CollectGeneralWaste?
 
+        try {
+            System.out.println("\u001B[33m" + "TRUCK EMPTYING BEGINNING: Medical Landfill current waste amount: " + city.getMedicalLandfill().getTotalWaste() + "\u001B[0m");
+            city.getWCD().DecomposeWaste(city.getMedicalLandfill(), truck);
+            System.out.println("\u001B[33m" + "TRUCK EMPTYING END: Medical Landfill current waste amount: " + city.getMedicalLandfill().getTotalWaste() + "\u001B[0m");
 
+        } catch (LandfillNotFoundException e) {
+            System.out.println("");
+        }
+
+        System.out.println("Waste collection ended");
+
+    }
+
+    public void EmptyTruckToGeneralLandfill() {
+        System.out.println("Driving to facility...");
+
+        try {
+            GeneralLandfill[] landfills = city.getGeneralLandfills();
+            System.out.println("Choosing which bin to empty...");
+
+            if (landfills[0].getTotalWaste() > landfills[1].getTotalWaste()) {
+                System.out.println("Emptying to General Landfill 1 and decomposing to recyclable and non-recyclable waste...");
+                System.out.println("\u001B[33m" + "TRUCK EMPTYING BEGINNING: General Landfill 1 current waste amount: " + landfills[0].getTotalWaste() + "\u001B[0m");
+                city.getWCD().DecomposeWaste(landfills[1], truck);
+                System.out.println("\u001B[33m" + "TRUCK EMPTYING END: General Landfill 1 current waste amount: " + landfills[0].getTotalWaste() + "\u001B[0m");
+
+            } else {
+                System.out.println("Emptying to General Landfill 2 and decomposing to recyclable and non-recyclable waste...");
+                System.out.println("\u001B[33m" + "TRUCK EMPTYING BEGINNING: General Landfill 2 current waste amount: " + landfills[1].getTotalWaste() + "\u001B[0m");
+                city.getWCD().DecomposeWaste(landfills[0], truck);
+                System.out.println("\u001B[33m" + "TRUCK EMPTYING END: General Landfill 2 current waste amount: " + landfills[0].getTotalWaste() + "\u001B[0m");
+
+                truck.resetWasteAmount();
+                System.out.println("\u001B[35m" + "TRUCK EMPTYING END: Truck current waste amount: " + truck.getWasteAmount() + "\u001B[0m");
+
+
+            }
+
+        } catch (LandfillNotFoundException e) {
+            System.out.println("");
+        }
+
+        System.out.println("Waste collection ended");
     }
 
     public Truck getTruck() {
