@@ -163,7 +163,7 @@ interface Order {
     public void Execute();
 }
 
-//ConcreteCommand
+//ConcreteCommand 1
 class MedicalCollectionOrder implements Order {
     TruckDriver truckDriver;
 
@@ -179,6 +179,7 @@ class MedicalCollectionOrder implements Order {
     }
 }
 
+//Concrete Command 2
 class GeneralCollectionOrder implements Order {
     TruckDriver truckDriver;
 
