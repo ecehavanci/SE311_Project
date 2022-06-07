@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 //Abstract factory
 abstract class Landfill {
-    protected ArrayList<RecyclableWaste> recyclableWasteStorage = new ArrayList<>();
+    private ArrayList<RecyclableWaste> recyclableWasteStorage = new ArrayList<>();
     private ArrayList<NonRecyclableWaste> nonRecyclableWasteStorage = new ArrayList<>();
 
     //adds non-recyclable waste to nonRecyclable Waste Storage
