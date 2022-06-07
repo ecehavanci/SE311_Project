@@ -15,6 +15,7 @@ public class CollectionDepartmentEmployee {
         this.ID = ID;
     }
 
+    // creates collection order depending on waste type and hands it over to truck driver
     public void CreateCollectionOrder(TruckDriver driver, TruckScreen screen, String type) {
         if (type.equals("M")) {
             Order collectionOrder = new MedicalCollectionOrder(driver);
@@ -31,6 +32,7 @@ public class CollectionDepartmentEmployee {
 }
 
 class WasteDecomposer {
+
     void Decompose(Landfill landfill, Truck truck) {
         RecyclableWaste wasteR = landfill.decomposeRecyclableWaste(truck.getRecyclableWasteAmount());
         NonRecyclableWaste wasteN = landfill.decomposeNonRecyclableWaste(truck.getNonRecyclableWasteAmount());
@@ -47,38 +49,27 @@ class WasteDecomposer {
 
 //There is a Waste Collection Department in the City which as employees in it
 class WasteCollectionDepartment {
-    //ArrayList<CollectionDepartmentEmployee> employees = new ArrayList<>();
-
+    CollectionDepartmentEmployee employee; //This is the person who is in charge in the Collection Department
     WasteDecomposer wasteDecomposer;
+
+    private int m_collectionNeedingBinCounter = 0;
+    private int g_collectionNeedingBinCounter = 0;
+
+    ArrayList<TruckDriver> truckDrivers = new ArrayList<>();
+
 
     public WasteCollectionDepartment(CollectionDepartmentEmployee employee, WasteDecomposer wasteDecomposer) {
         this.employee = employee;
         this.wasteDecomposer = wasteDecomposer;
     }
 
-    //This is the person who is in charge in the Collection Department
-    CollectionDepartmentEmployee employee;
-    ArrayList<TruckDriver> truckDrivers = new ArrayList<>();
-
-
-    private int m_collectionNeedingBinCounter = 0;
-    private int g_collectionNeedingBinCounter = 0;
-
-
-    /*public void AddEmployee(CollectionDepartmentEmployee employee) {
-        System.out.println(employees.size());
-        employees.add(employee);
-    }*/
-
+    //adds truck driver to waste collection department
     public void AddTruckDriver(TruckDriver driver) {
         truckDrivers.add(driver);
 
     }
 
-    /*public void AddTruck(Truck truck) {
-        trucks.add(truck);
-    }*/
-
+    //if 4 or more trash bins are at least 80% full, employee of department creates a collection order (for medical waste)
     public void M_DecideIfGarbageCollectionNeeded() {
         m_collectionNeedingBinCounter++;
 
@@ -95,6 +86,7 @@ class WasteCollectionDepartment {
         }
     }
 
+    //if 4 or more trash bins are at least 80% full, employee of department creates a collection order (for general waste)
     public void G_DecideIfGarbageCollectionNeeded() {
         g_collectionNeedingBinCounter++;
 
@@ -111,6 +103,7 @@ class WasteCollectionDepartment {
         }
     }
 
+    //decomposes the waste
     public void DecomposeWaste(Landfill landfill, Truck truck) {
         wasteDecomposer.Decompose(landfill, truck);
     }
@@ -123,19 +116,23 @@ class Truck {
     private double recyclableWasteAmount;
 
 
+    //collects trash from streets
     void addTrash(double recyclableWasteAmount, double nonRecyclableWasteAmount) {
         this.recyclableWasteAmount += recyclableWasteAmount;
         this.nonRecyclableWasteAmount += nonRecyclableWasteAmount;
     }
 
+    //calculates collected total waste amount
     public double getWasteAmount() {
         return nonRecyclableWasteAmount + recyclableWasteAmount;
     }
 
+    //calculates collected Non-Recyclable waste amount
     public double getNonRecyclableWasteAmount() {
         return nonRecyclableWasteAmount;
     }
 
+    //calculates collected Recyclable waste amount
     public double getRecyclableWasteAmount() {
         return recyclableWasteAmount;
     }
@@ -144,6 +141,7 @@ class Truck {
         return truckScreen;
     }
 
+    //truck driver empties the truck and reset the waste amount in the truck
     public void resetWasteAmount() {
         nonRecyclableWasteAmount = 0;
         recyclableWasteAmount = 0;
@@ -153,6 +151,7 @@ class Truck {
 
 //Invoker
 class TruckScreen {
+
     public void TransmitOrder(Order order) {
         order.Execute();
     }
@@ -160,6 +159,8 @@ class TruckScreen {
 
 //AbstractCommand
 interface Order {
+
+    //executes the order
     public void Execute();
 }
 
@@ -173,8 +174,8 @@ class MedicalCollectionOrder implements Order {
 
     @Override
     public void Execute() {
-        truckDriver.CollectMedicalWaste();
-        truckDriver.EmptyTruckToMedicalLandfill();
+        truckDriver.CollectMedicalWaste();  //executes truck driver's given order (collects medicak-waste)
+        truckDriver.EmptyTruckToMedicalLandfill(); //executes truck driver's given order (empties the truck to landfill)
 
     }
 }
@@ -214,6 +215,7 @@ class TruckDriver {
         this.truck = truck;
     }
 
+    //collects medical waste
     public void CollectMedicalWaste() {
         System.out.println("\u001B[35m" + "WASTE COLLECTION BEGINNING: Truck current waste amount: " + truck.getWasteAmount() + "\u001B[0m");
         System.out.println("Truck driver drives through streets...");
@@ -222,6 +224,7 @@ class TruckDriver {
 
     }
 
+    //collects general waste
     public void CollectGeneralWaste() {
         System.out.println("Truck driver drives through streets...");
         System.out.println("\u001B[35m" + "WASTE COLLECTION BEGINNING: Truck current waste amount: " + truck.getWasteAmount() + "\u001B[0m");
@@ -230,6 +233,7 @@ class TruckDriver {
 
     }
 
+    //empties medical bins of given streets
     public void EmptyFullMedicalBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
 
@@ -251,6 +255,7 @@ class TruckDriver {
         }
     }
 
+    //empties general bins of given streets
     public void EmptyFullGeneralBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
@@ -271,6 +276,7 @@ class TruckDriver {
         }
     }
 
+    //empties truck to medical landfill
     public void EmptyTruckToMedicalLandfill() {
         System.out.println("Driving to facility...");
         System.out.println("Emptying to Medical Landfill and decomposing to recyclable and non-recyclable waste...");
@@ -293,6 +299,8 @@ class TruckDriver {
 
     }
 
+
+    //empties truck to general landfill
     public void EmptyTruckToGeneralLandfill() {
         System.out.println("Driving to facility...");
 
