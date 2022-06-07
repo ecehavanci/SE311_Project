@@ -13,31 +13,31 @@ abstract class Landfill {
         recyclableWasteStorage.add(waste);
     }
 
-    public double getTotalWaste(){
+    public double getTotalWaste() {
         double totalWaste = 0;
-        for (Waste waste : recyclableWasteStorage){
-            totalWaste+=waste.getWasteAmount();
+        for (Waste waste : recyclableWasteStorage) {
+            totalWaste += waste.getWasteAmount();
         }
 
-        for (Waste waste : nonRecyclableWasteStorage){
-            totalWaste+=waste.getWasteAmount();
+        for (Waste waste : nonRecyclableWasteStorage) {
+            totalWaste += waste.getWasteAmount();
         }
 
         return totalWaste;
     }
 
-    public double getRecyclableWaste(){
+    public double getRecyclableWaste() {
         double totalWaste = 0;
-        for (Waste waste : recyclableWasteStorage){
-            totalWaste+=waste.getWasteAmount();
+        for (Waste waste : recyclableWasteStorage) {
+            totalWaste += waste.getWasteAmount();
         }
         return totalWaste;
     }
 
-    public double getNonRecyclableWaste(){
+    public double getNonRecyclableWaste() {
         double totalWaste = 0;
-        for (Waste waste : nonRecyclableWasteStorage){
-            totalWaste+=waste.getWasteAmount();
+        for (Waste waste : nonRecyclableWasteStorage) {
+            totalWaste += waste.getWasteAmount();
         }
 
         return totalWaste;
@@ -52,7 +52,6 @@ abstract class Landfill {
 class MedicalLandfill extends Landfill {
     @Override
     public RecyclableWaste decomposeRecyclableWaste(double amount) {
-        //return new RecyclableMedicalWaste("Li", "Liquid");
         return new RecyclableMedicalWaste(amount);
 
     }
@@ -79,13 +78,6 @@ class GeneralLandfill extends Landfill {
 
 //Abstract Product
 abstract class Waste {
-    /*abstract public String getWasteElement();   //waste element
-
-    abstract public String getWasteSubstance(); //if waste is solid,liquid or gas
-
-    abstract public boolean isRecyclable();
-
-    abstract public String getWasteType();*/
 
     abstract double getWasteAmount();
 
@@ -96,41 +88,9 @@ abstract class Waste {
 //Abstract Product A
 //RecyclableWaste base class
 abstract class RecyclableWaste extends Waste {
-    /*protected String element;
-    protected String substance;
-    //protected boolean isRecyclable;
-    protected String wasteType;*/
 
     protected double wasteAmount;
 
-    /*@Override
-    public String getWasteElement() {
-        return element;
-    }
-
-    @Override
-    public String getWasteSubstance() {
-        return substance;
-    }
-
-    @Override
-    public boolean isRecyclable() {
-        return true;
-    }
-
-    @Override
-    public String getWasteType() {
-        return wasteType;
-    }*/
-
-    /*@Override
-    public void printAllInfo() {
-        System.out.println("---- WASTE INFO ----");
-        System.out.println("Element: " + getWasteElement());
-        System.out.println("Substance: " + getWasteSubstance());
-        System.out.println("Recyclable: " + isRecyclable());
-        System.out.println("Waste Type: " + getWasteType());
-    }*/
 
     public void printAllInfo() {
         System.out.println("---- RECYCLABLE WASTE INFO ----");
@@ -148,11 +108,6 @@ class RecyclableMedicalWaste extends RecyclableWaste {
     double getWasteAmount() {
         return wasteAmount;
     }
-    /*public RecyclableMedicalWaste(String element, String substance) {
-        this.element = element;
-        this.substance = substance;
-        wasteType = "Medical Waste";
-    }*/
 
 }
 
@@ -166,11 +121,6 @@ class RecyclableGeneralWaste extends RecyclableWaste {
     double getWasteAmount() {
         return wasteAmount;
     }
-    /*public RecyclableGeneralWaste(String element, String substance) {
-        this.element = element;
-        this.substance = substance;
-        wasteType = "General Waste";
-    }*/
 
 }
 
@@ -179,39 +129,6 @@ class RecyclableGeneralWaste extends RecyclableWaste {
 abstract class NonRecyclableWaste extends Waste {
     protected double wasteAmount;
 
-    /*protected String element;
-    protected String substance;
-    //protected boolean isRecyclable;
-    protected String wasteType;
-
-    @Override
-    public String getWasteElement() {
-        return element;
-    }
-
-    @Override
-    public String getWasteSubstance() {
-        return substance;
-    }
-
-    @Override
-    public boolean isRecyclable() {
-        return false;
-    }
-
-    @Override
-    public String getWasteType() {
-        return wasteType;
-    }
-
-    @Override
-    public void printAllInfo() {
-        System.out.println("---- WASTE INFO ----");
-        System.out.println("Element: " + getWasteElement());
-        System.out.println("Substance: " + getWasteSubstance());
-        System.out.println("Recyclable: " + isRecyclable());
-        System.out.println("Waste Type: " + getWasteType());
-    }*/
     public void printAllInfo() {
         System.out.println("---- RECYCLABLE WASTE INFO ----");
         System.out.println("Waste Amount: " + getWasteAmount());
@@ -221,11 +138,6 @@ abstract class NonRecyclableWaste extends Waste {
 
 //Concrete Product B1
 class NonRecyclableMedicalWaste extends NonRecyclableWaste {
-    /*public NonRecyclableMedicalWaste(String element, String substance) {
-        this.element = element;
-        this.substance = substance;
-        wasteType = "Medical Waste";
-    }*/
 
     public NonRecyclableMedicalWaste(double amount) {
         this.wasteAmount = amount;
@@ -247,9 +159,5 @@ class NonRecyclableGeneralWaste extends NonRecyclableWaste {
     double getWasteAmount() {
         return wasteAmount;
     }
-    /*public NonRecyclableGeneralWaste(String element, String substance) {
-        this.element = element;
-        this.substance = substance;
-        wasteType = "General Waste";
-    }*/
+
 }

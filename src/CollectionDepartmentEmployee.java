@@ -258,8 +258,6 @@ class TruckDriver {
             if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
                 if (streetIterator.CurrentTrashBin().getToken().equals("G")) {
                     System.out.println("Emptying bin...");
-                    //System.out.println("Amount od thrash to be added to truck: " + streetIterator.CurrentTrashBin().getRecyclableWasteLevel() + "+" +  streetIterator.CurrentTrashBin().getNonRecyclableWasteLevel() + "=" +
-                    //(streetIterator.CurrentTrashBin().getRecyclableWasteLevel()+ streetIterator.CurrentTrashBin().getNonRecyclableWasteLevel()));
                     truck.addTrash(streetIterator.CurrentTrashBin().getRecyclableWasteLevel(), streetIterator.CurrentTrashBin().getNonRecyclableWasteLevel());
                     streetIterator.CurrentTrashBin().resetFullnessLevel();
                 } else {
