@@ -3,19 +3,25 @@ import java.util.ArrayList;
 //Component
 interface LocatingElement {
 
+    //adds the locating element
     void Add(LocatingElement locatingElement);
 
+    //removes the locating element
     void Remove(LocatingElement locatingElement);
 
+    //displays the locating element in levels
     void Display(int indent);
 
+    //traverses the location with Truck Driver
     void Traverse(TruckDriver truckDriver, String type);//type is "M" or "G" meaning medical or general
 
-    //TODO: WARNING VERY UNSURE ABOUT THAT
+    //returns Waste Collection Department
     WasteCollectionDepartment getWCD();
 
+    //returns MedicalLandfill
     MedicalLandfill getMedicalLandfill() throws LandfillNotFoundException;
 
+    //returns GeneralLandfills
     GeneralLandfill[] getGeneralLandfills() throws LandfillNotFoundException;
 }
 
@@ -100,7 +106,6 @@ class City extends LocationContainer {
     //comes from abstract factory pattern, city is the client
     //city uses Landfills
     //private ArrayList<Waste> wastes;
-
     @Override
     public MedicalLandfill getMedicalLandfill() {
         return medicalLandfill;
