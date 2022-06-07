@@ -5,14 +5,17 @@ abstract class Landfill {
     protected ArrayList<RecyclableWaste> recyclableWasteStorage = new ArrayList<>();
     private ArrayList<NonRecyclableWaste> nonRecyclableWasteStorage = new ArrayList<>();
 
+    //adds non-recyclable waste to nonRecyclable Waste Storage
     public void addWaste(NonRecyclableWaste waste) {
         nonRecyclableWasteStorage.add(waste);
     }
 
+    //adds recyclable waste to Recyclable Waste Storage
     public void addWaste(RecyclableWaste waste) {
         recyclableWasteStorage.add(waste);
     }
 
+    //calculates all waste amounts in a landfill
     public double getTotalWaste() {
         double totalWaste = 0;
         for (Waste waste : recyclableWasteStorage) {
@@ -26,6 +29,7 @@ abstract class Landfill {
         return totalWaste;
     }
 
+    //calculates recyclable waste amount in recyclable Waste Storage
     public double getRecyclableWaste() {
         double totalWaste = 0;
         for (Waste waste : recyclableWasteStorage) {
@@ -34,6 +38,7 @@ abstract class Landfill {
         return totalWaste;
     }
 
+    //calculates non-recyclable waste amount in NonRecyclable Waste Storage
     public double getNonRecyclableWaste() {
         double totalWaste = 0;
         for (Waste waste : nonRecyclableWasteStorage) {
@@ -43,13 +48,16 @@ abstract class Landfill {
         return totalWaste;
     }
 
+    //decompeses(extracts) Recyclable Waste with given waste amount
     abstract public RecyclableWaste decomposeRecyclableWaste(double amount);
 
+    //decompeses(extracts) Non-Recyclable Waste with given waste amount
     abstract public NonRecyclableWaste decomposeNonRecyclableWaste(double amount);
 }
 
 //Concrete factory 1
 class MedicalLandfill extends Landfill {
+
     @Override
     public RecyclableWaste decomposeRecyclableWaste(double amount) {
         return new RecyclableMedicalWaste(amount);
@@ -79,8 +87,10 @@ class GeneralLandfill extends Landfill {
 //Abstract Product
 abstract class Waste {
 
+    //returns waste amount
     abstract double getWasteAmount();
 
+    //prints waste info
     abstract public void printAllInfo();
 
 }
