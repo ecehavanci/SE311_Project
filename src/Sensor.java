@@ -7,13 +7,13 @@ class MedicalTrashBin extends TrashBin {
 
     public void AddTrash(double recyclableTrashAmount, double nonRecyclableTrashAmount) {
         if (recyclableTrashAmount + nonRecyclableTrashAmount > 100) {
-            System.out.println("Invalid amount of thrash");
+            System.out.println("Invalid amount of trash");
         } else {
             if (recyclableTrashAmount + nonRecyclableTrashAmount + this.recyclableWasteLevel + this.nonRecyclableWasteLevel < 100) {
                 recyclableWasteLevel += recyclableTrashAmount;
                 nonRecyclableWasteLevel += nonRecyclableTrashAmount;
 
-                System.out.println("Thrash added. Current fullness level: " + (recyclableWasteLevel + nonRecyclableWasteLevel));
+                System.out.println("Trash added. Current fullness level: " + (recyclableWasteLevel + nonRecyclableWasteLevel));
                 if (recyclableWasteLevel + nonRecyclableWasteLevel >= 80) {
                     Notify('M');//"M" stands for general trash bin
                 }
@@ -33,13 +33,13 @@ class GeneralTrashBin extends TrashBin {
 
     public void AddTrash(double recyclableTrashAmount, double nonRecyclableTrashAmount) {
         if (recyclableTrashAmount + nonRecyclableTrashAmount > 100) {
-            System.out.println("Invalid amount of thrash");
+            System.out.println("Invalid amount of trash");
         } else {
             if (recyclableTrashAmount + nonRecyclableTrashAmount + this.recyclableWasteLevel + this.nonRecyclableWasteLevel < 100) {
                 recyclableWasteLevel += recyclableTrashAmount;
                 nonRecyclableWasteLevel += nonRecyclableTrashAmount;
 
-                System.out.println("Thrash added. Current fullness level: " + (recyclableWasteLevel + nonRecyclableWasteLevel));
+                System.out.println("Trash added. Current fullness level: " + (recyclableWasteLevel + nonRecyclableWasteLevel));
                 if (recyclableWasteLevel + nonRecyclableWasteLevel >= 80) {
                     Notify('G');//"G" stands for general trash bin
                 }
@@ -59,18 +59,24 @@ interface Observer {
 
 //ConcreteObserver
 class Sensor implements Observer {
+    private double binFullnessLevel;
 
     @Override
     public void M_Update(TrashBin trashBin) {
+        binFullnessLevel = trashBin.getFullnessLevel();
+        System.out.println("Bin is " + binFullnessLevel + "% full. A notification is being sent to Waste Collection Department...");
 
-        System.out.println("Bin is 80% full. A notification is being sent to Waste Collection Department...");
+        //Notification is sent to Waste Collection department so it can decide whether waste collection is needed
         trashBin.WCD.M_DecideIfGarbageCollectionNeeded();
 
     }
 
     @Override
     public void G_Update(TrashBin trashBin) {
-        System.out.println("Bin is 80% full. A notification is being sent to Waste Collection Department...");
+        binFullnessLevel = trashBin.getFullnessLevel();
+        System.out.println("Bin is " + binFullnessLevel + "% full. A notification is being sent to Waste Collection Department...");
+
+        //Notification is sent to Waste Collection department so it can decide whether waste collection is needed
         trashBin.WCD.G_DecideIfGarbageCollectionNeeded();
     }
 }

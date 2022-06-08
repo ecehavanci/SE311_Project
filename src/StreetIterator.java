@@ -55,7 +55,7 @@ public class StreetIterator implements Iterator {
 abstract class TrashBin {
     //Every trash bin knows about the Waste Collection Department they are going to notify when bin is 80% full
     WasteCollectionDepartment WCD;
-    //Although in observer pattern there can be many observers, in this project every thrash bin has only one sensor.
+    //Although in observer pattern there can be many observers, in this project every trash bin has only one sensor.
     //So there is a list of observers but only one observer can be attached to the trash bin
     ArrayList<Sensor> sensors = new ArrayList<>();
     protected double nonRecyclableWasteLevel;
@@ -69,6 +69,7 @@ abstract class TrashBin {
         this.WCD = WCD;
     }
 
+    //Only the first attached sensor is accepted
     void Attach(Sensor sensor) {
         System.out.println("Attaching sensor...");
         if (this.sensors.size() == 0) {
@@ -79,7 +80,7 @@ abstract class TrashBin {
     }
 
     void Detach() {
-        //Basically this will get rid of the list with posibly one element in it and create another list with size 0
+        //Basically this will get rid of the list with one element in it and create another list with size 0
         if (sensors.size() == 0) {
             sensors = new ArrayList<>();
         } else {
@@ -129,7 +130,7 @@ abstract class TrashBin {
 
 interface Aggregate{
     public Iterator CreateIterator();
-    public void add(TrashBin it);
+    public void add(TrashBin trashBin);
     public int getCount ();
     public TrashBin get(int idx);
 }
@@ -146,14 +147,13 @@ class Street implements LocatingElement,Aggregate {
         this.name = name;
     }
 
-    //Stores a list of Trash Bins
+    //Stores a list of TrashBins
     private ArrayList<TrashBin> trashBins = new ArrayList<>();
 
     public TrashBin GetTrashBin(int index) {
         return trashBins.get(index);
     }
 
-    //private ArrayList<TrashBin> trashBins = new ArrayList<TrashBin>();
     public StreetIterator CreateIterator() {
         return new StreetIterator(this);
     }
@@ -163,26 +163,30 @@ class Street implements LocatingElement,Aggregate {
         return trashBins.size();
     }
 
-    //Adds a new Trash Bin to the list
+    //Adds a new TrashBin to the list
     public void add(TrashBin trashBin) {
         trashBins.add(trashBin);
     }
 
+    //Gets the TrashBin in the given index
     public TrashBin get(int index) {
         return trashBins.get(index);
     }
 
 
+    //Since this is the leaf element nothing can be added
     @Override
     public void Add(LocatingElement locatingElement) {
         System.out.println("You can't add.");
     }
 
+    //Since this is the leaf element nothing can be removed
     @Override
     public void Remove(LocatingElement locatingElement) {
         System.out.println("You can't remove.");
     }
 
+    //This function is for displaying leaf (the smallest element of hierarchy)
     @Override
     public void Display(int indent) {
         for (int i = 0; i < indent + 1; i++) {
@@ -192,6 +196,7 @@ class Street implements LocatingElement,Aggregate {
         System.out.println(name);
     }
 
+    //Traverse function is for emptying bins by calling another function that collects the waste in TrashBins iteratively
     @Override
     public void Traverse(TruckDriver truckDriver, String type) {
         if (type.equals("M")) {

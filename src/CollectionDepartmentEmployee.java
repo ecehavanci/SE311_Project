@@ -239,7 +239,7 @@ class TruckDriver {
         // Then if the trash is above 80%, it performs the emptying process.
         // If it is below 80%, the trash bin is passed without being emptied.
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
-            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: " : "General thrash bin: ");
+            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical trash bin: " : "General trash bin: ");
             System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().getFullnessLevel());
 
             if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
@@ -263,7 +263,7 @@ class TruckDriver {
     public void EmptyFullGeneralBins(Street street) {
         Iterator streetIterator = new StreetIterator(street);
         for (streetIterator.First(); !streetIterator.IsDone(); streetIterator.Next()) {
-            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical thrash bin: " : "General thrash bin: ");
+            System.out.print(streetIterator.CurrentTrashBin().getToken().equals("M") ? "Medical trash bin: " : "General trash bin: ");
             System.out.println("Trash level of current bin: " + streetIterator.CurrentTrashBin().getFullnessLevel());
             if (streetIterator.CurrentTrashBin().getFullnessLevel() >= 80) {
                 if (streetIterator.CurrentTrashBin().getToken().equals("G")) {
@@ -310,7 +310,7 @@ class TruckDriver {
 
         try {
             GeneralLandfill[] landfills = city.getGeneralLandfills();
-            System.out.println("Choosing which bin to empty...");
+            System.out.println("Choosing which landfill to empty...");
 
             if (landfills[0].getTotalWaste() > landfills[1].getTotalWaste()) {
                 System.out.println("Emptying to General Landfill 1 and decomposing to recyclable and non-recyclable waste...");

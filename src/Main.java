@@ -108,10 +108,10 @@ public class Main {
 
         System.out.println("\n~Welcome to Waste Collection System~");
         System.out.println("-QUICK INFORMATION-");
-        System.out.println("There are 2 Cities namely Izmir and Eskisehir, each city has 8 bins in it.");
+        System.out.println("There are 2 Cities namely Izmir and Eskisehir. Izmir has 9, Eskisehir has 8 trash bins.");
         System.out.println("There are medical trash bins (the ones in front of an hospital for example) and general trash bins (the ones in a normal street).");
-        System.out.println("Izmir has 3 mecial, 5 general trash bins.");
-        System.out.println("Eskisehir has 6 mecial, 2 general trash bins.\n");
+        System.out.println("Izmir has 4 mecial, 5 general trash bins.");
+        System.out.println("Eskisehir has 6 medicial, 2 general trash bins.\n");
 
         System.out.println("Hierarchy in Izmir as follows:");
         Izmir.Display(0);
@@ -156,13 +156,13 @@ public class Main {
         outputInformation("\nAdding trash to bin 8: Izmir - Medical trash bin...");
         s167.GetTrashBin(2).AddTrash(11, 23);
         s167.GetTrashBin(2).AddTrash(40, 3);
-        s167.GetTrashBin(2).AddTrash(5, 7);
+        s167.GetTrashBin(2).AddTrash(15, 7);
 
         outputInformation("\nAdding trash to bin 9: Izmir - Medical trash bin...");
         s168.GetTrashBin(0).AddTrash(92, 1);
 
         outputInformation("\nAdding trash to bin 3: Izmir - Medical trash bin...");
-        s166.GetTrashBin(0).AddTrash(9, 72);
+        s166.GetTrashBin(0).AddTrash(19, 72);
 
 
     }
