@@ -28,19 +28,19 @@ public class Main {
         Street s167 = new Street("167 Street");
         Street s168 = new Street("168 Street");
 
-        s165.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
-        s165.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
+        s165.add(new MedicalTrashBin(Izmir.getWCD()));
+        s165.add(new GeneralTrashBin(Izmir.getWCD()));
 
-        s166.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
-        s166.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
-        s166.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
+        s166.add(new MedicalTrashBin(Izmir.getWCD()));
+        s166.add(new GeneralTrashBin(Izmir.getWCD()));
+        s166.add(new GeneralTrashBin(Izmir.getWCD()));
 
-        s167.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
-        s167.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
-        s167.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
+        s167.add(new GeneralTrashBin(Izmir.getWCD()));
+        s167.add(new GeneralTrashBin(Izmir.getWCD()));
+        s167.add(new MedicalTrashBin(Izmir.getWCD()));
 
 
-        s168.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
+        s168.add(new MedicalTrashBin(Izmir.getWCD()));
 
 
         s165.GetTrashBin(0).Attach(new Sensor());
@@ -65,16 +65,16 @@ public class Main {
         Street s44 = new Street("44 Street");
 
 
-        s42.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
-        s42.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
-        s42.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
-        s42.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
+        s42.add(new MedicalTrashBin(Izmir.getWCD()));
+        s42.add(new MedicalTrashBin(Izmir.getWCD()));
+        s42.add(new MedicalTrashBin(Izmir.getWCD()));
+        s42.add(new GeneralTrashBin(Izmir.getWCD()));
 
-        s43.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
-        s43.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
+        s43.add(new MedicalTrashBin(Izmir.getWCD()));
+        s43.add(new GeneralTrashBin(Izmir.getWCD()));
 
-        s44.AddTrashBin(new GeneralTrashBin(Izmir.getWCD()));
-        s44.AddTrashBin(new MedicalTrashBin(Izmir.getWCD()));
+        s44.add(new GeneralTrashBin(Izmir.getWCD()));
+        s44.add(new MedicalTrashBin(Izmir.getWCD()));
 
 
         s42.GetTrashBin(0).Attach(new Sensor());

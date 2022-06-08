@@ -49,7 +49,7 @@ class WasteDecomposer {
 
 //There is a Waste Collection Department in the City which as employees in it
 class WasteCollectionDepartment {
-        private WasteDecomposer wasteDecomposer;
+    private WasteDecomposer wasteDecomposer;
     //This is the person who is in charge in the Collection Department
     private CollectionDepartmentEmployee employee;
     private ArrayList<TruckDriver> truckDrivers = new ArrayList<>();

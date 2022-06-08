@@ -127,26 +127,27 @@ abstract class TrashBin {
 }
 
 
-
+interface Aggregate{
+    public Iterator CreateIterator();
+    public void add(TrashBin it);
+    public int getCount ();
+    public TrashBin get(int idx);
+}
 
 //-------------------------COMMON AREA----------------------------
 
 //ITERATOR: Concrete Aggregate
 //Implements the Iterator creation interface to return an instance of the proper ConcreteIterator.
 // ------- COMPOSITE: Leaf
-class Street implements LocatingElement {
+class Street implements LocatingElement,Aggregate {
     private String name;
 
     public Street(String name) {
         this.name = name;
     }
 
-    //Maintains a list of Trash Bins
+    //Stores a list of Trash Bins
     private ArrayList<TrashBin> trashBins = new ArrayList<>();
-
-    public void AddTrashBin(TrashBin bin) {
-        trashBins.add(bin);
-    }
 
     public TrashBin GetTrashBin(int index) {
         return trashBins.get(index);
@@ -166,7 +167,6 @@ class Street implements LocatingElement {
     public void add(TrashBin trashBin) {
         trashBins.add(trashBin);
     }
-
 
     public TrashBin get(int index) {
         return trashBins.get(index);
